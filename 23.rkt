@@ -26,5 +26,3 @@
 
 (define (get-answer) 
   (for/sum ([x (in-range 1 28125)] #:when (not (sum-of-2-abundant? x))) x))
-
-(define answer 4179871)
