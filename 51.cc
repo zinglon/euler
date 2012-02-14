@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <cmath>
 
 using std::cout;
 using std::endl;
@@ -96,6 +97,7 @@ int main() {
   //SIEVE OF ERATOSTHENES TIME YEEEEAAAAHHHHH
   //let's try 4 million
   const int MAX = 4000000;
+  const int SQRT_MAX = std::sqrt(MAX);
   const int goal = 8;
   //[3,5..]
   auto prim = vector<char>(MAX/2, 1);
@@ -115,7 +117,8 @@ int main() {
       }
     }
 
-    for(int np = p; np < (int)prim.size(); np += actual)
+    if(actual <= SQRT_MAX)
+    for(int np = (actual * actual)/2 - 1; np < (int)prim.size(); np += actual)
       prim[np] = 0;
   }
   cout << "Nothing!" << endl;
