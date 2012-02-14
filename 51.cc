@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <algorithm>
 
 using std::cout;
 using std::endl;
@@ -49,15 +48,14 @@ int chop(int x, T const& digits) {
   return x;
 }
 
-//I couldn't get std::mem_fun working for some incomprehensible reason
-char size(vector<char> const& vec) {
-  return vec.size();
-}
-
-vector<pair<int, vector<char>>> normalize(int num) {
+vector<pair<int, vector<char>>> make_keys(int num) {
   auto digits = vector<vector<char>>(10,vector<char>());
   auto index = 0;
+
+  //not strictly necessary, just felt like having the early-bailout hatch
   bool good = false;
+
+  //record the indexes of the digits
   int tempnum = num;
   while(tempnum) {
     digits[tempnum%10].push_back(index);
@@ -66,15 +64,11 @@ vector<pair<int, vector<char>>> normalize(int num) {
     index++;
   }
 
-  decltype(normalize(0)) ret;
+  decltype(make_keys(0)) ret;
   if(!good) return ret;
 
-  vector<char> rawdigitcounts;
-  //apple clang 3.0 doesn't seem to like std::begin and doesn't have lambdas. AWESOME
-  std::transform(digits.begin(), digits.end(), std::back_inserter(rawdigitcounts), size);
-
   //for each digit that occurs twice or more,
-  // make a wildcarded version by removing 2+ occurances and remembering the indices
+  // make a wildcarded version by removing 2+ occurrences and remembering the indexes
   for(int digit = 0; digit < 10; digit++) {
     auto const& idxs = digits[digit];
     for(int remove = 2; remove <= (int)idxs.size(); remove++) {
@@ -96,7 +90,7 @@ T remove_ref(T& x) { return x; }
 
 int main() {
   //yeah, I feel like some decltype abuse
-  typedef decltype(remove_ref(normalize(0)[0])) keytype;
+  typedef decltype(remove_ref(make_keys(0)[0])) keytype;
   multimap<keytype, int> values;
 
   //SIEVE OF ERATOSTHENES TIME YEEEEAAAAHHHHH
@@ -110,7 +104,7 @@ int main() {
 
     int actual = p*2+3;
     
-    for(auto const& possible : normalize(actual)) {
+    for(auto const& possible : make_keys(actual)) {
       values.insert(std::make_pair(possible, actual));
       if(values.count(possible) == goal) {
 	auto holycrap = values.equal_range(possible);
