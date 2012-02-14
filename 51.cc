@@ -124,6 +124,6 @@ int main() {
     for(int np = p; np < (int)prim.size(); np += actual)
       prim[np] = 0;
   }
-  cout << "crap!" << endl;
+  cout << "Nothing!" << endl;
   return 0;
 }
