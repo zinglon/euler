@@ -117,6 +117,7 @@ int main() {
       }
     }
 
+    //potential off-by-one error and subsequent nasal demons here
     if(actual <= SQRT_MAX)
     for(int np = (actual * actual)/2 - 1; np < (int)prim.size(); np += actual)
       prim[np] = 0;
